@@ -18,12 +18,14 @@ public class GameCell : MonoBehaviour
         IsBusy = false;
     }
 
-    public void OccupyTheCell(Checker checker)
+    public bool TryOccupyTheCell(Checker checker)
     {
         if (checker == null)
         {
             IsBusy = true;
             myChecker = checker;
+            return true;
         }
+        else return false;
     }
 }
