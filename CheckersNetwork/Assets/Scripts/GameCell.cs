@@ -6,7 +6,7 @@ using UnityEngine;
 public class GameCell : MonoBehaviour
 {
     public bool IsBusy { get; private set; }
-    private Checker myChecker { get; set; }
+    public Checker myChecker { get; private set; }
 
     GameCell()
     {
