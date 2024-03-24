@@ -7,13 +7,18 @@ using UnityEngine.UIElements;
 
 public class GameField : MonoBehaviour
 {
+    // game field array dimensions
     enum Dimensions
     {
         horizontal,
         vertical
     }
+
+    int horizontalFieldRange = 8;
+    int verticalFieldRange = 8;
     GameCell [,] gameFieldSquares;
     public static GameField instance;
+
     private void Awake()
     {
         if (instance == null) { instance = this; }
@@ -22,7 +27,7 @@ public class GameField : MonoBehaviour
 
     private void Start()
     {
-        gameFieldSquares = new GameCell[8, 8]; // first array dimension is letter and second is number lines on the board
+        gameFieldSquares = new GameCell[horizontalFieldRange, verticalFieldRange]; // first array dimension is letter and second is number lines on the board
     }
 
     /// <summary>
@@ -55,7 +60,7 @@ public class GameField : MonoBehaviour
         // Checks 2 diagonal cells from current, in choosen direction
         #region CheckCycle
         // Check one cell in positive direction (positive direction is right)
-        if (InRange(x, 0))
+        if (InRange(x, Dimensions.horizontal))
         {
             if (gameFieldSquares[x, y].IsBusy) // Identify the checker owner if cell is busy
             {
@@ -77,7 +82,6 @@ public class GameField : MonoBehaviour
                             actions.Add(new Move(true, new Vector2(x, y)));
                             // keep checking the area around the new location
                             List<Move> moves = CheckMovesFrom(new Vector2(x, y), isPositiveDirection);
-
                             // Merge current first Move from list of actions with first Move from returned list of actions
                             actions[0].path.AddRange(moves[0].path);
                             // Remove the move which were merged before.
@@ -95,11 +99,47 @@ public class GameField : MonoBehaviour
                 actions.Add(new Move(false, new Vector2(x, y)));
             }
         }
+
         // Check one cell in negative direction
-        if (originX - 1 > 0 &&
-            !gameFieldSquares[originX - 1, originY].IsBusy)
+        x = originX - 1;
+        if (InRange(x, Dimensions.horizontal))
         {
-            actions.Add(new Move(false, new Vector2(originX + 1, originY)));
+            if (gameFieldSquares[x, y].IsBusy) // Identify the checker owner if cell is busy
+            {
+                Checker meetedChecker = gameFieldSquares[x, y].myChecker;
+                Checker currentChecker = gameFieldSquares[originX, originY].myChecker;
+
+                if (meetedChecker.owner != currentChecker.owner) // check is it opponent checker or no
+                {
+                    // if it is an opponent checker then define if strike is available
+                    // check the cell behind opponent checker
+                    y = isPositiveDirection ? y + 1 : y - 1;
+                    x--;
+                    if (InRange(y, Dimensions.vertical) &&
+                        InRange(x, Dimensions.horizontal))
+                    {
+                        if (!gameFieldSquares[x, y].IsBusy)
+                        {
+                            // Add to available strikes
+                            actions.Add(new Move(true, new Vector2(x, y)));
+                            // keep checking the area around the new location
+                            List<Move> moves = CheckMovesFrom(new Vector2(x, y), isPositiveDirection);
+                            // Merge current first Move from list of actions with first Move from returned list of actions
+                            actions[0].path.AddRange(moves[0].path);
+                            // Remove the move which were merged before.
+                            moves.RemoveAt(0);
+                            // Add remaining moves to list
+                            actions.AddRange(moves);
+                        }
+                    }
+                    // if cell out of game field range, then move unavailable
+                }
+                // if checker is owned then it's a dead end, move unavailable
+            }
+            else // if checked cell is free and available for occupation
+            {
+                actions.Add(new Move(false, new Vector2(x, y)));
+            }
         }
         return actions;
 
@@ -116,5 +156,10 @@ public class GameField : MonoBehaviour
     {
         if (value < gameFieldSquares.GetLength((int)dimension) && value > 0) return true;
         else return false;
+    }
+
+    void AddChecker()
+    {
+
     }
 }

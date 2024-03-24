@@ -17,6 +17,12 @@ public class Move : ScriptableObject
     {
 
     }
+    /// <summary>
+    /// Data of move available for the cell
+    /// </summary>
+    /// <param name="isStrike">is this move are the strike to enemy checker?</param>
+    /// <param name="freeCellCoordinates">Coordinates of the cell which will be reached after this move</param>
+    /// <param name="color">Color which will be used for paint the path on the game board</param>
     public Move(bool isStrike, Vector2 freeCellCoordinates, Color color)
     {
         this.isStrike = isStrike;
