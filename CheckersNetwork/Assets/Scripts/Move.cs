@@ -8,7 +8,12 @@ public class Move : ScriptableObject
     public List<Vector2> path = new List<Vector2>();
     public Color color { get; private set; }
 
-    public Move(bool isStrike, Vector2 freeCellCoordinates) : this(isStrike, freeCellCoordinates, Color.white)
+    /// <summary>
+    /// Data of move available for the cell
+    /// </summary>
+    /// <param name="isStrike">is this move are the strike to enemy checker?</param>
+    /// <param name="freeCellCoordinates">Coordinates of the cell which will be reached after this move</param>
+    public Move(bool isStrike, Vector2 freeCellCoordinates) : this(isStrike, freeCellCoordinates, Color.blue)
     {
 
     }

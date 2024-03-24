@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -6,6 +7,11 @@ using UnityEngine.UIElements;
 
 public class GameField : MonoBehaviour
 {
+    enum Dimensions
+    {
+        horizontal,
+        vertical
+    }
     GameCell [,] gameFieldSquares;
     public static GameField instance;
     private void Awake()
@@ -19,44 +25,96 @@ public class GameField : MonoBehaviour
         gameFieldSquares = new GameCell[8, 8]; // first array dimension is letter and second is number lines on the board
     }
 
-    public void CheckMovesFrom(Vector2 position, bool isFrontDirection)
+    /// <summary>
+    /// Checkers should get availabe moves from this method.
+    /// </summary>
+    /// <param name="position"></param>
+    /// <param name="isPositiveDirection"></param>
+    /// <returns></returns>
+    public List<Move> CheckMovesFrom(Vector2 position, bool isPositiveDirection)
     {
-        // if beating is able - the checker must
-        List<Move> availableMoves = new List<Move>();
-        List<Vector2> availableStrikes = new List<Vector2>();
-        int x = (int)position.x;
-        int y = (int)position.y;
+        // values for requests to array
+        int originX = (int)position.x;
+        int originY = (int)position.y;
 
-        if (isFrontDirection) y++;
-        else y--;
+        // starter coordinates validity check (example x or y = -1)
+        if (!InRange(originX, Dimensions.horizontal) || !InRange(originY, Dimensions.vertical)) { return null; }
 
-        // Check 2 diagonal cells in choosen direction (forward or backward)
-        
-        if (gameFieldSquares.GetLength(0) <= x + 1) // Check if target cell exist
+        // NOTE: if beating is able - the checker must
+        // returnable list
+        List<Move> actions = new List<Move>();
+
+        // scan direction determination
+        // positive or negative is meant direction of increased or decreased numbers on game board 
+        int y = isPositiveDirection ? originY + 1: originY - 1;
+        int x = originX + 1;
+
+        // exit of method if end of gameboard reached
+        if (!InRange(y, Dimensions.vertical)) { return null; } 
+
+        // Checks 2 diagonal cells from current, in choosen direction
+        #region CheckCycle
+        // Check one cell in positive direction (positive direction is right)
+        if (InRange(x, 0))
         {
-            if (gameFieldSquares[x + 1, y].IsBusy) // Identify the checker owner if cell is busy
+            if (gameFieldSquares[x, y].IsBusy) // Identify the checker owner if cell is busy
             {
-                Checker meetedChecker = gameFieldSquares[x + 1, y].myChecker;
-                Checker choosedChecker = gameFieldSquares[x, (int)position.y].myChecker;
+                Checker meetedChecker = gameFieldSquares[x, y].myChecker;
+                Checker currentChecker = gameFieldSquares[originX, originY].myChecker;
 
-                if (meetedChecker.owner != choosedChecker.owner)
+                if (meetedChecker.owner != currentChecker.owner) // check is it opponent checker or no
                 {
+                    // if it is an opponent checker then define if strike is available
                     // check the cell behind opponent checker
-                    if (!gameFieldSquares[x + 2, y + 1].IsBusy) {
-                        // Add to available strikes and continue to check the space around new place
+                    y = isPositiveDirection ? y + 1 : y - 1;
+                    x++;
+                    if (InRange(y, Dimensions.vertical) && 
+                        InRange(x, Dimensions.horizontal))
+                    {
+                        if (!gameFieldSquares[x, y].IsBusy)
+                        {
+                            // Add to available strikes
+                            actions.Add(new Move(true, new Vector2(x, y)));
+                            // keep checking the area around the new location
+                            List<Move> moves = CheckMovesFrom(new Vector2(x, y), isPositiveDirection);
+
+                            // Merge current first Move from list of actions with first Move from returned list of actions
+                            actions[0].path.AddRange(moves[0].path);
+                            // Remove the move which were merged before.
+                            moves.RemoveAt(0);
+                            // Add remaining moves to list
+                            actions.AddRange(moves);
+                        }
                     }
+                    // if cell out of game field range, then move unavailable
                 }
+                // if checker is owned then it's a dead end, move unavailable
             }
-            else
+            else // if checked cell is free and available for occupation
             {
-                availableMoves.Add(new Move(false, new Vector2(x + 1, y)));
+                actions.Add(new Move(false, new Vector2(x, y)));
             }
         }
-            
-        if (x - 1 > 0 &&
-            !gameFieldSquares[x - 1, y].IsBusy)
+        // Check one cell in negative direction
+        if (originX - 1 > 0 &&
+            !gameFieldSquares[originX - 1, originY].IsBusy)
         {
-            availableMoves.Add(new Move(false, new Vector2(x + 1, y)));
+            actions.Add(new Move(false, new Vector2(originX + 1, originY)));
         }
+        return actions;
+
+        #endregion
+    }
+
+    /// <summary>
+    /// Check if value is in range of game field
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="dimension"></param>
+    /// <returns></returns>
+    bool InRange (int value, Dimensions dimension)
+    {
+        if (value < gameFieldSquares.GetLength((int)dimension) && value > 0) return true;
+        else return false;
     }
 }
