@@ -26,77 +26,66 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         gameField = GameField.instance;
+        Debug.Log(0 % 2);
     }
 
     public void ArrangeCheckers(Side side, Player player)
     {
-        // if player side is bottom, then placing checkers begin from zero coordinates
-        int y = 0;
-        // changeable marker to increase or decrease index after every cycle
-        int marker = 1; 
-        // line on which checkers placement will end.
-        int lineNumber = numberOfLines; 
-        
-        // Change values to opposite if another side choosen
+        GameObject newChecker;
         if (side == Side.top)
         {
-            y = gameField.Height;
-            marker = -1;
-            lineNumber = gameField.Height - numberOfLines;
+            newChecker = Instantiate(checkerPrefab, new Vector2(7, 7), checkerPrefab.transform.rotation);
+            gameField.AddChecker(newChecker.transform.position, newChecker.GetComponent<Checker>());
+            newChecker = Instantiate(checkerPrefab, new Vector2(5, 7), checkerPrefab.transform.rotation);
+            gameField.AddChecker(newChecker.transform.position, newChecker.GetComponent<Checker>());
+            newChecker = Instantiate(checkerPrefab, new Vector2(3, 7), checkerPrefab.transform.rotation);
+            gameField.AddChecker(newChecker.transform.position, newChecker.GetComponent<Checker>());
+            newChecker = Instantiate(checkerPrefab, new Vector2(1, 7), checkerPrefab.transform.rotation);
+            gameField.AddChecker(newChecker.transform.position, newChecker.GetComponent<Checker>());
+            newChecker = Instantiate(checkerPrefab, new Vector2(0, 6), checkerPrefab.transform.rotation);
+            gameField.AddChecker(newChecker.transform.position, newChecker.GetComponent<Checker>());
+            newChecker = Instantiate(checkerPrefab, new Vector2(2, 6), checkerPrefab.transform.rotation);
+            gameField.AddChecker(newChecker.transform.position, newChecker.GetComponent<Checker>());
+            newChecker = Instantiate(checkerPrefab, new Vector2(4, 6), checkerPrefab.transform.rotation);
+            gameField.AddChecker(newChecker.transform.position, newChecker.GetComponent<Checker>());
+            newChecker = Instantiate(checkerPrefab, new Vector2(6, 6), checkerPrefab.transform.rotation);
+            gameField.AddChecker(newChecker.transform.position, newChecker.GetComponent<Checker>());
+            newChecker = Instantiate(checkerPrefab, new Vector2(7, 5), checkerPrefab.transform.rotation);
+            gameField.AddChecker(newChecker.transform.position, newChecker.GetComponent<Checker>());
+            newChecker = Instantiate(checkerPrefab, new Vector2(5, 5), checkerPrefab.transform.rotation);
+            gameField.AddChecker(newChecker.transform.position, newChecker.GetComponent<Checker>());
+            newChecker = Instantiate(checkerPrefab, new Vector2(3, 5), checkerPrefab.transform.rotation);
+            gameField.AddChecker(newChecker.transform.position, newChecker.GetComponent<Checker>());
+            newChecker = Instantiate(checkerPrefab, new Vector2(1, 5), checkerPrefab.transform.rotation);
+            gameField.AddChecker(newChecker.transform.position, newChecker.GetComponent<Checker>());
         }
-
-        //For not to double the code for different comparisons
-        bool Comparison(int value1, int value2)
+        else
         {
-            if (side == Side.top) // mean reverse
-            {
-                return value1 > value2;
-            }
-            else if (side == Side.bottom)
-            {
-                return value1 < value2;
-            }
-            else return false;
+            newChecker = Instantiate(checkerPrefab, new Vector2(0, 0), checkerPrefab.transform.rotation);
+            gameField.AddChecker(newChecker.transform.position, newChecker.GetComponent<Checker>());
+            newChecker = Instantiate(checkerPrefab, new Vector2(2, 0), checkerPrefab.transform.rotation);
+            gameField.AddChecker(newChecker.transform.position, newChecker.GetComponent<Checker>());
+            newChecker = Instantiate(checkerPrefab, new Vector2(4, 0), checkerPrefab.transform.rotation);
+            gameField.AddChecker(newChecker.transform.position, newChecker.GetComponent<Checker>());
+            newChecker = Instantiate(checkerPrefab, new Vector2(6, 0), checkerPrefab.transform.rotation);
+            gameField.AddChecker(newChecker.transform.position, newChecker.GetComponent<Checker>());
+            newChecker = Instantiate(checkerPrefab, new Vector2(1, 1), checkerPrefab.transform.rotation);
+            gameField.AddChecker(newChecker.transform.position, newChecker.GetComponent<Checker>());
+            newChecker = Instantiate(checkerPrefab, new Vector2(3, 1), checkerPrefab.transform.rotation);
+            gameField.AddChecker(newChecker.transform.position, newChecker.GetComponent<Checker>());
+            newChecker = Instantiate(checkerPrefab, new Vector2(5, 1), checkerPrefab.transform.rotation);
+            gameField.AddChecker(newChecker.transform.position, newChecker.GetComponent<Checker>());
+            newChecker = Instantiate(checkerPrefab, new Vector2(7, 1), checkerPrefab.transform.rotation);
+            gameField.AddChecker(newChecker.transform.position, newChecker.GetComponent<Checker>());
+            newChecker = Instantiate(checkerPrefab, new Vector2(0, 2), checkerPrefab.transform.rotation);
+            gameField.AddChecker(newChecker.transform.position, newChecker.GetComponent<Checker>());
+            newChecker = Instantiate(checkerPrefab, new Vector2(2, 2), checkerPrefab.transform.rotation);
+            gameField.AddChecker(newChecker.transform.position, newChecker.GetComponent<Checker>());
+            newChecker = Instantiate(checkerPrefab, new Vector2(4, 2), checkerPrefab.transform.rotation);
+            gameField.AddChecker(newChecker.transform.position, newChecker.GetComponent<Checker>());
+            newChecker = Instantiate(checkerPrefab, new Vector2(6, 2), checkerPrefab.transform.rotation);
+            gameField.AddChecker(newChecker.transform.position, newChecker.GetComponent<Checker>());
         }
 
-        for (; Comparison(y, lineNumber); y = y + marker)
-        {
-            // if top side then count going in reverse
-            int x = (side == Side.top) ? gameField.Width : 0;
-            int columnNumber = (side == Side.top) ? 0 : gameField.Width;
-
-            for (; Comparison(x, columnNumber); x = x + marker)
-            {
-                // This allow to place checkers only in black cells
-                if (y % 2 == 0)
-                {
-                    // If line number is even then place chekers only in even columns
-                    if (x % 2 == 0)
-                    {
-                        GameObject newChecker = Instantiate(checkerPrefab, new Vector2(x, y), checkerPrefab.transform.rotation);
-                        //if (!gameField.AddChecker(newChecker.transform.position, newChecker.GetComponent<Checker>()))
-                        //{
-                        //    Debug.LogError("Unable to place checker " + newChecker.transform.position);
-                        //    Destroy(newChecker);
-                        //}
-                        //else newChecker.GetComponent<Checker>().SetOwner(player);
-                    }
-                }
-                // if line number is odd then place chekers only in odd columns
-                else
-                {
-                    if (x % 2 != 0)
-                    {
-                        GameObject newChecker = Instantiate(checkerPrefab, new Vector2(x, y), checkerPrefab.transform.rotation);
-                        //if (!gameField.AddChecker(newChecker.transform.position, newChecker.GetComponent<Checker>()))
-                        //{
-                        //    Debug.LogError("Unable to place checker " + newChecker.transform.position);
-                        //    Destroy(newChecker);
-                        //}
-                        //else newChecker.GetComponent<Checker>().SetOwner(player);
-                    }
-                }
-            }
-        }
     }
 }
