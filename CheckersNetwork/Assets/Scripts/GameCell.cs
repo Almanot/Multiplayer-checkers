@@ -15,12 +15,13 @@ public class GameCell : MonoBehaviour
 
     public void FreeTheCell()
     {
+        myChecker = null;
         IsBusy = false;
     }
 
-    public bool TryOccupyTheCell(Checker checker)
+    public bool ClaimTheCell(Checker checker)
     {
-        if (checker == null)
+        if (myChecker == null)
         {
             IsBusy = true;
             myChecker = checker;

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Checker : MonoBehaviour
 {
-    public Player owner {  get; private set; }
+    public Player owner { get; private set; }
     public bool directionForward { get; private set; }
     public bool isKing { get; private set; }
     public Vector2 myPosition { get; private set; }
@@ -17,7 +17,7 @@ public class Checker : MonoBehaviour
 
         if (position.y == opponentEdge)
         {
-            BecomeKing();
+            BecomeAKing();
         }
     }
 
@@ -26,7 +26,7 @@ public class Checker : MonoBehaviour
         
     }
 
-    void BecomeKing()
+    void BecomeAKing()
     {
         isKing = true;
     }
@@ -35,5 +35,13 @@ public class Checker : MonoBehaviour
     {
         GameField.instance.CheckMovesFrom(transform.position, directionForward);
         if (isKing) { GameField.instance.CheckMovesFrom(transform.position, !directionForward); }
+    }
+
+    public void SetOwner(Player player)
+    {
+        if (owner == null)
+        {
+            owner = player;
+        }
     }
 }

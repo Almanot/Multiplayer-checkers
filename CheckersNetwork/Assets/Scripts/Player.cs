@@ -6,20 +6,16 @@ public class Player : MonoBehaviour
 {
     public string PlayerName { get; private set; }
     public bool isStrikeAvailable { get; private set; }
+    public bool isPlayerSideDown = true;
 
     private void Start()
     {
         isStrikeAvailable = false;
-    }
 
-    public bool isPlayerSideDown {  get
-        {
-            return isPlayerSideDown;
-        }
-        private set
-        {
-            isPlayerSideDown = true;
-        }
+        GameManager.Side side;
+        if (isPlayerSideDown) side = GameManager.Side.bottom;
+        else side = GameManager.Side.top;
+        GameManager.instance.ArrangeCheckers(side, this);
     }
 
     void ChangePlayerSide()

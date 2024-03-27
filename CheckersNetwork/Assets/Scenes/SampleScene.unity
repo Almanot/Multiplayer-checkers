@@ -220,6 +220,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b9a5d0a929ba8942aa150415a5e5243, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  checkerPrefab: {fileID: 8822573290298695405, guid: c6b616db04d0a174c913acdf5bb38c8c, type: 3}
 --- !u!4 &466228100
 Transform:
   m_ObjectHideFlags: 0
@@ -475,7 +476,7 @@ MonoBehaviour:
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 917560308}
-    PlayerPrefab: {fileID: 2472879129882187918, guid: 7cbe4530e7dbbf541a25cf110a326b9f, type: 3}
+    PlayerPrefab: {fileID: 8026897786370719930, guid: fb515b8a2aa3da34eb77c485c312a8b6, type: 3}
     Prefabs:
       NetworkPrefabsLists:
       - {fileID: 11400000, guid: 0516301e7232d284eb4f396f45020c7b, type: 2}
@@ -1522,7 +1523,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3416961063796635117, guid: 595629172dbc7e3469bbe0a79f06fd04, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3416961063796635117, guid: 595629172dbc7e3469bbe0a79f06fd04, type: 3}
       propertyPath: m_LocalRotation.w

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1045565221660359806}
   - component: {fileID: 8108409927793643029}
+  - component: {fileID: 6804497270925543256}
   m_Layer: 0
   m_Name: Checker
   m_TagString: Untagged
@@ -84,3 +85,15 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &6804497270925543256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8822573290298695405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ca2b8764cc8f0c4596efcd30ddc7899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

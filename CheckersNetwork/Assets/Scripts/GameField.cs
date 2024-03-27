@@ -7,15 +7,16 @@ using UnityEngine.UIElements;
 
 public class GameField : MonoBehaviour
 {
-    // game field array dimensions
+    // for game field array dimensions
     enum Dimensions
     {
         horizontal,
         vertical
     }
 
-    int horizontalFieldRange = 8;
-    int verticalFieldRange = 8;
+    public int Width { get { return 8; } }
+    public int Height { get { return 8; } }
+
     GameCell [,] gameFieldSquares;
     public static GameField instance;
 
@@ -27,7 +28,7 @@ public class GameField : MonoBehaviour
 
     private void Start()
     {
-        gameFieldSquares = new GameCell[horizontalFieldRange, verticalFieldRange]; // first array dimension is letter and second is number lines on the board
+        gameFieldSquares = new GameCell[Width, Height]; // first array dimension is letter and second is number lines on the board
     }
 
     /// <summary>
@@ -158,8 +159,15 @@ public class GameField : MonoBehaviour
         else return false;
     }
 
-    void AddChecker()
+    /// <summary>
+    /// Add checker on the game field in coordinates
+    /// </summary>
+    /// <param name="coords"></param>
+    /// <param name="checker"></param>
+    /// <returns></returns>
+    public bool AddChecker(Vector2 coords, Checker newChecker)
     {
-
+        if (gameFieldSquares[(int)coords.x, (int)coords.y].ClaimTheCell(newChecker)) return true;
+        else return false;
     }
 }
