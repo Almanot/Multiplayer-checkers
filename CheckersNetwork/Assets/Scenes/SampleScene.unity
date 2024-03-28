@@ -221,6 +221,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkerPrefab: {fileID: 8822573290298695405, guid: c6b616db04d0a174c913acdf5bb38c8c, type: 3}
+  gameField: {fileID: 9058062510901091736}
 --- !u!4 &466228100
 Transform:
   m_ObjectHideFlags: 0

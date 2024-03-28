@@ -6,8 +6,9 @@ public class Player : MonoBehaviour
 {
     public string PlayerName { get; private set; }
     public bool isStrikeAvailable { get; private set; }
-    public bool isPlayerSideDown = true;
-
+    public bool isPlayerSideDown { get; private set; }
+    List<Checker> myCheckers = new List<Checker>();
+    
     private void Start()
     {
         isStrikeAvailable = false;
@@ -18,13 +19,19 @@ public class Player : MonoBehaviour
         GameManager.instance.ArrangeCheckers(side, this);
     }
 
-    void ChangePlayerSide()
+    public void ChangePlayerSide()
     {
         isPlayerSideDown = !isPlayerSideDown;
     }
 
-    void StrikeAvailable()
+    public void SetStrikeStatus(bool value)
     {
-        isStrikeAvailable = true;
+        isStrikeAvailable = value;
+    }
+
+    public void AddChecker(Checker checker)
+    {
+        myCheckers.Add(checker);
+        checker.SetOwner(this);
     }
 }

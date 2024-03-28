@@ -42,6 +42,8 @@ public class Checker : MonoBehaviour
         if (owner == null)
         {
             owner = player;
+            player.AddChecker(this);
+            if (!player.isPlayerSideDown) directionForward = false;
         }
     }
 }
