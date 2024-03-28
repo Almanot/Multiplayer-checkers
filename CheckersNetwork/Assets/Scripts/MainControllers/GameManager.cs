@@ -16,8 +16,11 @@ public class GameManager : MonoBehaviour
     private GameObject checkerPrefab;
     [SerializeField]
     private GameField gameField;
+
     const int numberOfLines = 3; // how many lines will be busy by checkers
+    const int maxPlayers = 2;
     bool[] busySide = new bool[Enum.GetNames(typeof(Side)).Length]; // To prevent place twice on the same side.
+    List<Player> playerList = new List<Player>();
     
     public static GameManager instance;
 
@@ -26,6 +29,15 @@ public class GameManager : MonoBehaviour
         if (instance == null) instance = this;
     }
 
+    public bool AddNewPlayer(Player player)
+    {
+        if (playerList.Count < maxPlayers && !playerList.Contains(player))
+        {
+            playerList.Add(player);
+            return true;
+        }
+        return false;
+    }
     /// <summary>
     /// Place checkers for player on the choosen side
     /// </summary>
@@ -33,6 +45,7 @@ public class GameManager : MonoBehaviour
     /// <param name="player"></param>
     public void ArrangeCheckers(Side side, Player player)
     {
+        // prevent double placing
         if (busySide[(int)side]) { return; }
         busySide[(int)side] = true;
 

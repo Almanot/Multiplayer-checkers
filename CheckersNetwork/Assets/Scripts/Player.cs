@@ -34,4 +34,9 @@ public class Player : MonoBehaviour
         myCheckers.Add(checker);
         checker.SetOwner(this);
     }
+
+    public void RemoveChecker(Checker checker)
+    {
+        myCheckers.Remove(checker);
+    }
 }

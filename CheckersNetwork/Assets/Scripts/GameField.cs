@@ -68,7 +68,7 @@ public class GameField : MonoBehaviour
                 Checker meetedChecker = gameFieldSquares[x, y].myChecker;
                 Checker currentChecker = gameFieldSquares[originX, originY].myChecker;
 
-                if (meetedChecker.owner != currentChecker.owner) // check is it opponent checker or no
+                if (meetedChecker.myOwner != currentChecker.myOwner) // check is it opponent checker or no
                 {
                     // if it is an opponent checker then define if strike is available
                     // check the cell behind opponent checker
@@ -110,7 +110,7 @@ public class GameField : MonoBehaviour
                 Checker meetedChecker = gameFieldSquares[x, y].myChecker;
                 Checker currentChecker = gameFieldSquares[originX, originY].myChecker;
 
-                if (meetedChecker.owner != currentChecker.owner) // check is it opponent checker or no
+                if (meetedChecker.myOwner != currentChecker.myOwner) // check is it opponent checker or no
                 {
                     // if it is an opponent checker then define if strike is available
                     // check the cell behind opponent checker

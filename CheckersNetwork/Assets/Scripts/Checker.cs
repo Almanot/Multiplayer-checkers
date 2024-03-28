@@ -5,20 +5,15 @@ using UnityEngine;
 
 public class Checker : MonoBehaviour
 {
-    public Player owner { get; private set; }
+    public Player myOwner { get; private set; }
     public bool directionForward { get; private set; }
     public bool isKing { get; private set; }
     public Vector2 myPosition { get; private set; }
-    int opponentEdge;
 
-    public void SetNewPosition(Vector2 position)
+    public void MoveToCell(Vector2 position)
     {
         myPosition = position;
 
-        if (position.y == opponentEdge)
-        {
-            BecomeAKing();
-        }
     }
 
     private void OnMouseDown()
@@ -39,9 +34,9 @@ public class Checker : MonoBehaviour
 
     public void SetOwner(Player player)
     {
-        if (owner == null)
+        if (myOwner == null)
         {
-            owner = player;
+            myOwner = player;
             player.AddChecker(this);
             if (!player.isPlayerSideDown) directionForward = false;
         }
