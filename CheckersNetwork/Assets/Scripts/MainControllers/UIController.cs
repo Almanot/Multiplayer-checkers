@@ -8,7 +8,8 @@ public class UIController : MonoBehaviour
 {
     [SerializeField] Button startHost;
     [SerializeField] Button startClient;
-    [SerializeField] Button ready;
+    [SerializeField] Button readyButton;
+    public Button ReadyButton { get { return readyButton; } }
     [SerializeField] GameObject StarterMenu;
     [SerializeField] GameObject playerDataBox;
     [SerializeField] GameObject playerDataHolderPrefab;
@@ -34,6 +35,7 @@ public class UIController : MonoBehaviour
         NetworkManager.Singleton.Shutdown();
     }
 
+    // Called by client when he succesfully connected to host
     public void CloseStarterMenu()
     {
         StarterMenu.gameObject.SetActive(false);

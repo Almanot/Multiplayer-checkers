@@ -4,10 +4,15 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static GameManager;
 
 public class GameField : MonoBehaviour
 {
+    // for easier code reading
+    public enum Side
+    {
+        bottom,
+        top
+    }
     // for game field array dimensions
     enum Dimensions
     {
@@ -231,6 +236,16 @@ public class GameField : MonoBehaviour
                         else newChecker.GetComponent<Checker>().SetOwner(player);
                     }
                 }
+            }
+        }
+    }
+    void CleanGameField()
+    {
+        for (int x = 0; x < Width; x++)
+        {
+            for (int y = 0; y < Height; y++)
+            {
+                gameFieldSquares[x, y].FreeTheCell();
             }
         }
     }

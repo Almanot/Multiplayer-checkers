@@ -10,13 +10,13 @@ public class Player : NetworkBehaviour
     public string PlayerName { get; private set; }
     public bool isStrikeAvailable { get; private set; }
     List<Checker> myFigures = new List<Checker>();
-    GameManager.Side? starterPosition;
-    public bool isMovingForward 
+    GameField.Side? starterPosition;
+    public bool isMovingForward
     { 
         get
         {
             // TO DO : change logic for move direction definition. Need separate class for rules
-            if (starterPosition == GameManager.Side.bottom) return true;
+            if (starterPosition == GameField.Side.bottom) return true;
             else return false;
         }
     }
@@ -32,7 +32,16 @@ public class Player : NetworkBehaviour
             return;
         }
         // This need to close the starter UI menu only after successful connect to host
-        FindFirstObjectByType<GameMenuController>().CloseStarterMenu();
+        UIController interfaceController = FindFirstObjectByType<UIController>();
+        if (interfaceController != null) 
+        {
+            // If plyer spawned and start executed, interface can be closed
+            interfaceController.CloseStarterMenu(); 
+            // subscribe to just spawned player entitie to ready button.
+            interfaceController.ReadyButton.onClick.AddListener(GetReady);
+            // subscribe isReady variable to GameManager. When all players will be ready, GameMager will start the game.
+            isReady.OnValueChanged += GameManager.instance.PlayerReady;
+        }
     }
 
     public void SetStrikeStatus(bool value)
