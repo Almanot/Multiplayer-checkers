@@ -1,14 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using TMPro;
-using UnityEngine.UI;
 using Unity.Netcode;
+using UnityEngine;
+using UnityEngine.UI;
 
-public class GameMenuController : MonoBehaviour
+public class UIController : MonoBehaviour
 {
     [SerializeField] Button startHost;
     [SerializeField] Button startClient;
+    [SerializeField] Button ready;
     [SerializeField] GameObject StarterMenu;
     [SerializeField] GameObject playerDataBox;
     [SerializeField] GameObject playerDataHolderPrefab;

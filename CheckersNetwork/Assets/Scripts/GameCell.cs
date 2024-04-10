@@ -3,15 +3,10 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class GameCell : MonoBehaviour
+public class GameCell
 {
     public bool IsBusy { get; private set; }
     public Checker myChecker { get; private set; }
-
-    GameCell()
-    {
-        IsBusy = false;
-    }
 
     public void FreeTheCell()
     {

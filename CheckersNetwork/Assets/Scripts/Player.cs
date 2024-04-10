@@ -1,27 +1,38 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : NetworkBehaviour
 {
+    // Should be set to false before begin new game.
+    private NetworkVariable<bool> isReady = new NetworkVariable<bool>(false);
     public string PlayerName { get; private set; }
     public bool isStrikeAvailable { get; private set; }
-    public bool isPlayerSideDown { get; private set; }
-    List<Checker> myCheckers = new List<Checker>();
+    List<Checker> myFigures = new List<Checker>();
+    GameManager.Side? starterPosition;
+    public bool isMovingForward 
+    { 
+        get
+        {
+            // TO DO : change logic for move direction definition. Need separate class for rules
+            if (starterPosition == GameManager.Side.bottom) return true;
+            else return false;
+        }
+    }
     
     private void Start()
     {
-        isStrikeAvailable = false;
-
-        GameManager.Side side;
-        if (isPlayerSideDown) side = GameManager.Side.bottom;
-        else side = GameManager.Side.top;
-        GameManager.instance.ArrangeCheckers(side, this);
-    }
-
-    public void ChangePlayerSide()
-    {
-        isPlayerSideDown = !isPlayerSideDown;
+        SetStrikeStatus(false);
+        // Try to add player to game. If it false, disconnect him from the game.
+        if (!GameManager.instance.AddNewPlayerToGame(this, out starterPosition))
+        {
+            NetworkManager.Singleton.Shutdown();
+            Destroy(gameObject);
+            return;
+        }
+        // This need to close the starter UI menu only after successful connect to host
+        FindFirstObjectByType<GameMenuController>().CloseStarterMenu();
     }
 
     public void SetStrikeStatus(bool value)
@@ -31,12 +42,18 @@ public class Player : MonoBehaviour
 
     public void AddChecker(Checker checker)
     {
-        myCheckers.Add(checker);
+        myFigures.Add(checker);
         checker.SetOwner(this);
     }
 
     public void RemoveChecker(Checker checker)
     {
-        myCheckers.Remove(checker);
+        myFigures.Remove(checker);
+    }
+
+    
+    public void GetReady()
+    {
+        isReady.Value = true;
     }
 }

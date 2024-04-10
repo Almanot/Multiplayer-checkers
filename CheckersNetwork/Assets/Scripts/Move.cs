@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Move : ScriptableObject
+public class Move
 {
     public bool isStrike { get; private set; }
     public List<Vector2> path = new List<Vector2>();

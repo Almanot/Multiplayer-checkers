@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static GameManager;
 
 public class GameField : MonoBehaviour
 {
@@ -17,7 +18,10 @@ public class GameField : MonoBehaviour
     public int Width { get { return 8; } }
     public int Height { get { return 8; } }
 
+    [SerializeField] GameObject FigurePrefab;
+    const int numberOfLines = 3; // how many lines will be busy by checkers
     GameCell [,] gameFieldSquares;
+    List<Checker> checkerList;
     public static GameField instance;
 
     private void Awake()
@@ -29,6 +33,14 @@ public class GameField : MonoBehaviour
     private void Start()
     {
         gameFieldSquares = new GameCell[Width, Height]; // first array dimension is letter and second is number lines on the board
+        for (int x = 0; x < Width; x++)
+        {
+            for (int y = 0; y < Height; y++)
+            {
+                gameFieldSquares[x, y] = new GameCell();
+            }
+        }
+        checkerList = new List<Checker>();
     }
 
     /// <summary>
@@ -163,11 +175,63 @@ public class GameField : MonoBehaviour
     /// Add checker on the game field in coordinates
     /// </summary>
     /// <param name="coords"></param>
-    /// <param name="checker"></param>
+    /// <param name="newChecker"></param>
     /// <returns></returns>
-    public bool AddChecker(Vector2 coords, Checker newChecker)
+    public bool AddFigure(Vector2 coords, Checker newChecker)
     {
-        if (gameFieldSquares[(int)coords.x, (int)coords.y].ClaimTheCell(newChecker)) return true;
-        else return false;
+        bool result = gameFieldSquares[(int)coords.x, (int)coords.y].ClaimTheCell(newChecker);
+        if (!result) return false;
+        checkerList.Add(newChecker);
+        return true;
+    }
+
+    /// <summary>
+    /// Place checkers for player on the choosen side
+    /// </summary>
+    /// <param name="side"></param>
+    /// <param name="player"></param>
+    public void ArrangeCheckers(Side side, Player player)
+    {
+
+        // if player side is top then placing calculate statring position.
+        int y = (side == Side.bottom) ? 0 : Height - numberOfLines;
+        // line on which checkers placement will end. (if placement starts from the top, then calculate the placement end line)
+        int lineNumber = (side == Side.bottom) ? numberOfLines : Height;
+
+        for (; y < lineNumber; y++)
+        {
+            for (int x = 0; x < Width; x++)
+            {
+                // This allow to place checkers only in black cells
+                if (y % 2 == 0)
+                {
+                    // If line number is even then place chekers only in even columns
+                    if (x % 2 == 0)
+                    {
+                        GameObject newChecker = Instantiate(FigurePrefab, new Vector2(x, y), FigurePrefab.transform.rotation);
+                        if (!AddFigure(newChecker.transform.position, newChecker.GetComponent<Checker>()))
+                        {
+                            Debug.LogError("Unable to place checker " + newChecker.transform.position);
+                            Destroy(newChecker);
+                        }
+                        else newChecker.GetComponent<Checker>().SetOwner(player);
+                    }
+                }
+                // if line number is odd then place chekers only in odd columns
+                else
+                {
+                    if (x % 2 != 0)
+                    {
+                        GameObject newChecker = Instantiate(FigurePrefab, new Vector2(x, y), FigurePrefab.transform.rotation);
+                        if (!AddFigure(newChecker.transform.position, newChecker.GetComponent<Checker>()))
+                        {
+                            Debug.LogError("Unable to place checker " + newChecker.transform.position);
+                            Destroy(newChecker);
+                        }
+                        else newChecker.GetComponent<Checker>().SetOwner(player);
+                    }
+                }
+            }
+        }
     }
 }
